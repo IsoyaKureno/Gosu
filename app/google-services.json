@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1012145170986",
+    "firebase_url": "https://florians-coffee.firebaseio.com",
+    "project_id": "florians-coffee",
+    "storage_bucket": "florians-coffee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012145170986:android:a25e430fdf594e39",
+        "android_client_info": {
+          "package_name": "fr.wildcodeschool.florianscoffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012145170986-pn1loe38go2aja7p4vk96puu6odp9850.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.wildcodeschool.florianscoffee",
+            "certificate_hash": "09b2c2e4285417f5a0c448ed69e15b4b2cd0c835"
+          }
+        },
+        {
+          "client_id": "1012145170986-gtoqm336t6nssi3esedos1g10umag7ul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI4gqDa1AmVe0bXHddtz1aSMFkkWFGYEo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012145170986-gtoqm336t6nssi3esedos1g10umag7ul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

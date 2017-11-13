@@ -15,8 +15,9 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView _imageViewLogoMenu = (ImageView) findViewById(R.id.imageViewLogoMenu);
         TextView _textViewDescriptionMenu = (TextView) findViewById(R.id.textViewDescriptionMenu);
+        TextView _textViewShowMap = (TextView) findViewById(R.id.textViewShowMap);
 
-        _textViewDescriptionMenu.setPaintFlags(_textViewDescriptionMenu.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        _textViewShowMap.setPaintFlags(_textViewShowMap.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
     }
 }

@@ -45,6 +45,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/border_menu"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,17 +56,26 @@
             android:id="@+id/textViewShowNearCoffee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Localisation"
             android:textAlignment="center"
             tools:text="Localisation"/>
 
         <TextView
-            android:id="@+id/textViewShowmap"
+            android:id="@+id/textViewShowMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/linkToMap_menu"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             tools:text="@string/linkToMap_menu"/>
+
+        <TextView
+            android:id="@+id/textViewShowMeters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A 200 metres"
+            android:textAlignment="center"
+            tools:text="A 200 metres"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context="fr.wildcodeschool.florianscoffee.MainActivity">
 
+    <Button
+        android:id="@+id/buttonRequest"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="REQUEST" />
 </android.support.constraint.ConstraintLayout>

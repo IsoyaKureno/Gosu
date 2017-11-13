@@ -78,4 +78,9 @@
             tools:text="A 200 metres"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/buttonRequest"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="REQUEST" />
 </android.support.constraint.ConstraintLayout>

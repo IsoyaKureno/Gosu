@@ -1,8 +1,9 @@
 package fr.wildcodeschool.florianscoffee;
 
-import android.*;
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Criteria;
@@ -11,26 +12,53 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnMyLocationButtonClickListener {
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
+        ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnMyLocationButtonClickListener
+        , RoutingListener{
 
 
-    private static final String TAG = "MapActivity";
+    private static final String TAG = "MapsActivity";
 
     private GoogleMap mMap;
     private LatLngBounds Limite = new LatLngBounds(
@@ -38,6 +66,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Location mLocation;
 
+    public static ArrayList<CoffeeShopModel> mCoffeeShopList = new ArrayList<>();
+
+    private DatabaseReference myRef;
+
+    private Marker marker;
     private LatLng geoLoc;
     private Float zoom;
 
@@ -49,6 +82,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Manifest.permission.ACCESS_FINE_LOCATION
     };
 
+
+    private ProgressDialog progressDialog;
+    private ArrayList<Polyline> polylines;
+    private Routing routing;
+
+    private static final int[] COLORS = new int[]{R.color.shorterItinerary,R.color.other1,R.color.other2,R.color.other3,R.color.other4};
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +97,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("baristas");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mCoffeeShopList.clear();
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    CoffeeShopModel viaFerrata = data.getValue(CoffeeShopModel.class);
+                    placeMarker(viaFerrata);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.abs_layout);
+        polylines = new ArrayList<>();
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -95,9 +161,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap = googleMap;
+
         googleMap.getUiSettings().setMapToolbarEnabled(false);
-        // Ajouter le style a la map
         try {
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -106,12 +171,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.e(TAG, "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can'filtreText find style. Error: ", e);
+            Log.e(TAG, "Can't find style. Error: ", e);
         }
         mMap.setLatLngBoundsForCameraTarget(Limite);
         mMap.setOnMyLocationButtonClickListener(this);
         enableMyLocation();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(geoLoc, zoom));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                route(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), marker.getPosition());
+                return false;
+            }
+        });
+
+        Button requestButton = findViewById(R.id.buttonRequest);
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Polyline poly : polylines){
+                    poly.remove();
+                }
+                marker.hideInfoWindow();
+            }
+        });
     }
 
     @Override
@@ -191,5 +275,87 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void showMissingPermissionError () {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
+
+    public void placeMarker(CoffeeShopModel coffeeShopModel) {
+        String nom = coffeeShopModel.getNom();
+        String horaireClose = coffeeShopModel.getHoraireClose();
+        Double latitude = coffeeShopModel.getLatitude();
+        Double longitude = coffeeShopModel.getLongitude();
+
+        marker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
+                .title(nom)
+                .snippet("Ouvert jusqu'à : " + horaireClose)
+
+        );
+        marker.setTag(coffeeShopModel);
+    }
+
+
+    public void route(LatLng latLngDepart, LatLng latLngArrivee)
+    {
+        progressDialog = ProgressDialog.show(this, "Patientez",
+                "Nous cherchons votre itineraire", true);
+        routing = new Routing.Builder()
+                .travelMode(AbstractRouting.TravelMode.WALKING)
+                .withListener(this)
+                .alternativeRoutes(true)
+                .waypoints(latLngDepart, latLngArrivee)
+                .key("AIzaSyDNC9ntg8CyDXuBG0oYBa7L3GUjPc2AjGs")
+                .build();
+        routing.execute();
+    }
+
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        // The Routing request failed
+        progressDialog.dismiss();
+        if(e != null) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+        }else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+        // The Routing Request starts
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex)
+    {
+        progressDialog.dismiss();
+
+        if(polylines.size()>0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
+
+        polylines = new ArrayList<>();
+        for (int i = route.size() - 1; i >= 0; i--) {
+            PolylineOptions polyOptions = new PolylineOptions();
+            int colorIndex = i;
+            if (i > COLORS.length) {
+                colorIndex = COLORS.length - 1;
+            }
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + (-colorIndex * 3));
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(), route.get(0).getDistanceValue() + "m", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+        Log.i(TAG, "Routing was cancelled.");
     }
 }

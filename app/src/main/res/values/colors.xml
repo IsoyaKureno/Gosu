@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="shorterItinerary">#00d4ff</color>
+    <color name="other1">#287a8a</color>
+    <color name="other2">#1e4e57</color>
+    <color name="other3">#152d32</color>
+    <color name="other4">#111718</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
 </resources>

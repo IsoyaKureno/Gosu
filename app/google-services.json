@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1012145170986-vj5sgvpfg7mnmelvtob3btp2hpcc13rg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.wildcodeschool.florianscoffee",
+            "certificate_hash": "2c8356f7f420c9f0061d1aaa632dfad44327e303"
+          }
+        },
+        {
           "client_id": "1012145170986-pn1loe38go2aja7p4vk96puu6odp9850.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

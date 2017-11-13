@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Florian\'s Coffee</string>
+    <string name="description_menu">Une alliance entre qualité et bonne humeur.</string>
+    <string name="linkToMap_menu">Voir la carte</string>
+
+    <!-- Menu-->
+
+    <string name="logo_description">Logo Marque</string>
+
 </resources>

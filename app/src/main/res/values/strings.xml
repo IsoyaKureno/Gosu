@@ -13,5 +13,6 @@
     <!-- Menu-->
 
     <string name="logo_description">Logo Marque</string>
+    <string name="button_test_privatisation">Voir Privatisation</string>
 
 </resources>

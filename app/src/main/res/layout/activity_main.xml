@@ -69,18 +69,11 @@
             android:textColor="@color/colorPrimary"
             tools:text="@string/linkToMap_menu"/>
 
-        <TextView
-            android:id="@+id/textViewShowMeters"
+        <Button
+            android:id="@+id/buttonTESTPrivatisation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="A 200 metres"
-            android:textAlignment="center"
-            tools:text="A 200 metres"/>
+            android:layout_height="match_parent"
+            android:text="@string/button_test_privatisation"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonRequest"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="REQUEST" />
 </android.support.constraint.ConstraintLayout>

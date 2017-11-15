@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "177001797903",
+    "firebase_url": "https://florian-s-coffee.firebaseio.com",
+    "project_id": "florian-s-coffee",
+    "storage_bucket": "florian-s-coffee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177001797903:android:a25e430fdf594e39",
+        "android_client_info": {
+          "package_name": "fr.wildcodeschool.florianscoffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177001797903-5gsvhd21kak5bbjbnu5tk222dv334mdm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFrTXA3NioCWcYRf01bg_6NrCq8Lw8MPM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

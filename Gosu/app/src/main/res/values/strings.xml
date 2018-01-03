@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Gosu</string>
+    <string name="title_activity_list_card">ListCard</string>
+</resources>

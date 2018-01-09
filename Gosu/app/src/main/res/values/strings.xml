@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Gosu</string>
     <string name="title_activity_list_card">ListCard</string>
+
+    <string name="title_activity_play">PlayActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

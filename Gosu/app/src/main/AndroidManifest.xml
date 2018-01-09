@@ -20,6 +20,7 @@
             android:name=".ListCardActivity"
             android:label="@string/title_activity_list_card"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PlayActivity"></activity>
     </application>
 
 </manifest>

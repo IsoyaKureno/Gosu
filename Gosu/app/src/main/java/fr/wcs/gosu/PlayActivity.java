@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayActivity extends AppCompatActivity {
@@ -24,48 +25,54 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        String json = sharedPreferences.getString("Deck", "");
-        Type type = new TypeToken<List<CardModel>>(){}.getType();
-        List<CardModel> deck = new Gson().fromJson(json, type);
-
         Button buttonMutate = findViewById(R.id.buttonMutate);
         Button buttonPlay = findViewById(R.id.buttonPlay);
         Button buttonPass = findViewById(R.id.buttonPass);
 
-        RecyclerView view_list_card = findViewById(R.id.view_list_card);
-        RecyclerView.LayoutManager layoutManager =
-                new GridLayoutManager(getApplicationContext(),5);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        String json = sharedPreferences.getString("Deck", "");
+        Type type = new TypeToken<List<CardModel>>(){}.getType();
+        final List<CardModel> deck = new Gson().fromJson(json, type);
+
+        final RecyclerView view_list_card = findViewById(R.id.view_list_card);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),5);
         view_list_card.setLayoutManager(layoutManager);
         view_list_card.setItemAnimator(new DefaultItemAnimator());
 
-        //TODO : view_list_card.setAdapter(new ListCardAdapter(new List<CardModel>(){}));
-
-        while (!game.someoneWin(deck)){
-            buttonMutate.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    //TODO
-                    endTurn();
-                }
-            });
-            buttonPlay.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    //TODO
-                    endTurn();
-                }
-            });
-            buttonPass.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                    //TODO
-                    endTurn();
-                }
-            });
+        if (game.someoneWin(deck)){
+            buttonMutate.setVisibility(View.INVISIBLE);
+            buttonPlay.setVisibility(View.INVISIBLE);
+            buttonPass.setVisibility(View.INVISIBLE);
         }
+
+        buttonMutate.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                //TODO : Mutate
+                endTurn(deck,view_list_card);
+            }
+        });
+        buttonPlay.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                //TODO : Play
+                game.draw(game.currentPlayer);
+                endTurn(deck,view_list_card);
+            }
+        });
+        buttonPass.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                //TODO : Pass
+                endTurn(deck,view_list_card);
+            }
+        });
     }
 
-    public void endTurn(){
+    public void endTurn(List<CardModel> deck, RecyclerView view_list_card){
         game.turn++;
         game.currentPlayer = (game.turn-1)%game.players.size();
+
+        List<Integer> hand = game.players.get(game.currentPlayer).getHand();
+        List<CardModel> handOfCards = new ArrayList<>();
+        for (int idCard : hand){handOfCards.add(deck.get(idCard));}
+        view_list_card.setAdapter(new ListCardAdapter(handOfCards));
     }
 }

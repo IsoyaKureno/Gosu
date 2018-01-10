@@ -17,11 +17,13 @@ public class PlayerModel {
         this.nbAction = 1;
         this.advantage = false;
 
-        int[][] a = new int[3][5];
-        for (int rank=0; rank<a.length; rank++) {
-            for (int column : a[rank]) {
-                a[rank][column] = 404;}}
-        this.army = a;
+        int[][] anArmy = new int[3][5];
+        for (int rank = 0; rank<anArmy.length; rank++) {
+            for (int column = 0; column<anArmy[rank].length; column++) {
+                anArmy[rank][column] = 404;
+            }
+        }
+        this.army = anArmy;
     }
 
     public String getName() {return name;}

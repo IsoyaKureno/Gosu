@@ -20,15 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button_to_list_card = findViewById(R.id.button_to_list_card);
-        button_to_list_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent toListCard = new Intent(MainActivity.this,ListCardActivity.class);
-                startActivity(toListCard);
-            }
-        });
-
         List<CardModel> deck = new ArrayList<>();
         deck.add(new CardModel("Prescient","Ancient",1,1, new String[]{"Advantage"},new String[]{},new String[]{"Draw"}));
         deck.add(new CardModel("Prescient","Ancient",1,1, new String[]{"Advantage"},new String[]{},new String[]{"Draw"}));
@@ -144,5 +135,21 @@ public class MainActivity extends AppCompatActivity {
         String json = new Gson().toJson(deck);
         editor.putString("DECK", json);
         editor.apply();
+
+        Button button_to_play = findViewById(R.id.button_play);
+        button_to_play.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Intent toPlayActivity = new Intent(MainActivity.this,PlayActivity.class);
+                startActivity(toPlayActivity);
+            }
+        });
+
+        Button button_to_list_card = findViewById(R.id.button_to_list_card);
+        button_to_list_card.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Intent toListCard = new Intent(MainActivity.this,ListCardActivity.class);
+                startActivity(toListCard);
+            }
+        });
     }
 }

@@ -23,7 +23,7 @@ public class ListCardActivity extends AppCompatActivity {
 
         RecyclerView view_list_card = findViewById(R.id.view_list_card);
         RecyclerView.LayoutManager layoutManager =
-                new GridLayoutManager(getApplicationContext(),2);
+                new GridLayoutManager(getApplicationContext(),3);
         view_list_card.setLayoutManager(layoutManager);
         view_list_card.setItemAnimator(new DefaultItemAnimator());
 
